@@ -62,9 +62,10 @@ class MainClass:
             distance = sensor.distance_cm()
             print('Distance:', distance, 'cm')
             time.sleep(0.1)
-            
-            if (distance <= 10):
+            flag=1
+            if (distance <= 50 && flag):
                 motor.move(angulo) # tourne le servo à 0°
-            else:
+                flag=0
+            else if(distance>0):
                 motor.move(0)
             

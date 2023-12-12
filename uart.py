@@ -1,7 +1,7 @@
 from machine import uart
 
 
-Class UartClass:
+class UartClass:
     
     def __init__(self,tx_pin,rx_pin):
         self.uart=UART(1,115200,tx=tx_pin,rx=rx_pin)

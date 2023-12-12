@@ -69,3 +69,10 @@ class MainClass:
             else if(distance>0):
                 motor.move(0)
             
+            
+            
+            
+            
+            #lo de la uart
+                sender= UartClass(4,5)
+                receiver=UartClass(13,14)

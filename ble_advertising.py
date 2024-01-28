@@ -71,10 +71,9 @@ def advertising_payload(limited_disc=False, br_edr=False, name=None, services=No
 
 def decode_field(payload, adv_type):
     """Decodes a specific field from the advertising payload, where:
-
-            payload (bytearray): Advertising payload to be decoded.
+            payload (bytearray): Advertising payload to be decoded which is represents the information
+                                    about a Bluetooth device.
             adv_type (int): Type of the advertising field.
-
         And it returns a list of decoded values for the specified advertising field.
     """
 

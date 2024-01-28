@@ -3,7 +3,10 @@ import time
 
 
 class Servo:
-    # these defaults work for the standard TowerPro SG90
+    """A class used to simplify and use the Servo Motor
+        This class will initialize the angles and frequencies the servo needs to move smoothly.
+        
+    """
     __servo_pwm_freq = 50
     __min_u10_duty = 26 - 0 # offset for correction
     __max_u10_duty = 123- 0  # offset for correction
@@ -13,6 +16,9 @@ class Servo:
     
 
     def __init__(self, pin):
+        """UartClass constructor
+        It initialize the Pin
+        """
         self.__initialise(pin)
 
 
@@ -26,22 +32,48 @@ class Servo:
 
 
     def move(self, angle):
-        # round to 2 decimal places, so we have a chance of reducing unwanted servo adjustments
+        """ Round the decimal (2 places) for adjusting. We check if we need to move or stay the same and calculate the
+        new duty cycle
+        """
         angle = round(angle, 2)
-        # do we need to move?
         if angle == self.current_angle:
             return
         self.current_angle = angle
-        # calculate the new duty cycle and move the motor
         duty_u10 = self.__angle_to_u10_duty(angle)
         self.__motor.duty(duty_u10)
 
     def __angle_to_u10_duty(self, angle):
+        """Calculates the angle depending on the duty and the conversion angle
+        """
         return int((angle - self.min_angle) * self.__angle_conversion_factor) + self.__min_u10_duty
 
 
     def __initialise(self, pin):
+        """ Creates a PWM which is send to the pin.
+        """"
         self.current_angle = -0.001
         self.__angle_conversion_factor = (self.__max_u10_duty - self.__min_u10_duty) / (self.max_angle - self.min_angle)
         self.__motor = PWM(Pin(pin))
         self.__motor.freq(self.__servo_pwm_freq)
+        
+        
+    if __name__  == "__main__":
+        """Nominal behaviour test for servo implementation
+        Two instances of the Servo class and one instances from library time is used to test the code and implementation.
+        The expected behaviour is moving the servo from 0 degrees to 180, which we accomplished by adding 5 to the angle until is 180,
+        in this case the servo returns to 0 degrees.
+        
+          Wiring:
+        pin 12
+
+        """
+        
+        motor = Servo(12)
+        angulo = 0
+        while(1):
+            motor.move(angulo) # tourne le servo à 0°
+            angulo = angulo + 5
+            time.sleep(0.1)
+        
+            if(angulo >= 180):
+                angulo = 0 

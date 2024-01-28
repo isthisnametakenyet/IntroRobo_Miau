@@ -65,3 +65,10 @@ class Ultra:
         # 0.034320 cm/us that is 1cm each 29.1us
         cms = (pulse_time / 2) / 29.1
         return cms
+    
+    if __name__ == "main":
+        sensor = Ultra(5,18,10000)
+        while(1):   
+            distance = sensor.distance_cm()
+            print('Distance:', distance, 'cm')
+            time.sleep(2)

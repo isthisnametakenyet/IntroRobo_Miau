@@ -9,6 +9,7 @@ import bluetooth
 #   1 byte type (see constants below)
 #   N bytes type-specific data
 
+# Constants for advertising packet types
 _ADV_TYPE_FLAGS = const(0x01)
 _ADV_TYPE_NAME = const(0x09)
 _ADV_TYPE_UUID16_COMPLETE = const(0x3)
@@ -22,6 +23,21 @@ _ADV_TYPE_APPEARANCE = const(0x19)
 
 # Generate a payload to be passed to gap_advertise(adv_data=...).
 def advertising_payload(limited_disc=False, br_edr=False, name=None, services=None, appearance=0):
+    """Generates a BLE advertising payload given the arguments, where:
+
+            limited_disc (bool): Limited discovery mode flag that indicates whether the Bluetooth
+                                    device is operating in limited discovery mode.
+            br_edr (bool):       Bluetooth Enhanced Data Rate (EDR) flag which is a part of the Bluetooth
+                                    advertising packet that indicates whether the Bluetooth device
+                                    supports EDR.
+            name (str):          Device name to be advertised.
+            services (list):     List of Bluetooth UUIDs representing advertised services.
+            appearance (int):    Bluetooth appearance value that's a standardized numerical
+                                    representation that describes the physical appearance or role of a Bluetooth device.
+
+        And it returns and advertising payload.
+        """
+
     payload = bytearray()
 
     def _append(adv_type, value):
@@ -54,6 +70,14 @@ def advertising_payload(limited_disc=False, br_edr=False, name=None, services=No
 
 
 def decode_field(payload, adv_type):
+    """Decodes a specific field from the advertising payload, where:
+
+            payload (bytearray): Advertising payload to be decoded.
+            adv_type (int): Type of the advertising field.
+
+        And it returns a list of decoded values for the specified advertising field.
+    """
+
     i = 0
     result = []
     while i + 1 < len(payload):
@@ -64,11 +88,22 @@ def decode_field(payload, adv_type):
 
 
 def decode_name(payload):
+    """Decodes the device name from the advertising payload, where:
+            payload (bytearray): Advertising payload to be decoded which is represents the information
+                                    about a Bluetooth device.
+        Where it returns the decoded device name.
+
+    """
     n = decode_field(payload, _ADV_TYPE_NAME)
     return str(n[0], "utf-8") if n else ""
 
 
 def decode_services(payload):
+    """Decodes the list of services from the advertising payload, where:
+            payload (bytearray): Advertising payload to be decoded which is represents the information
+                                    about a Bluetooth device.
+        And it returns a list of Bluetooth UUIDs representing advertised services.
+    """
     services = []
     for u in decode_field(payload, _ADV_TYPE_UUID16_COMPLETE):
         services.append(bluetooth.UUID(struct.unpack("<h", u)[0]))
@@ -80,6 +115,7 @@ def decode_services(payload):
 
 
 def demo():
+    """Demo function to showcase the usage of the advertising payload functions."""
     payload = advertising_payload(
         name="micropython",
         services=[bluetooth.UUID(0x181A), bluetooth.UUID("6E400001-B5A3-F393-E0A9-E50E24DCCA9E")],

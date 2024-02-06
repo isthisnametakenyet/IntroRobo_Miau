@@ -42,6 +42,7 @@ class BLESimplePeripheral:
         self._write_callback = None
         self._payload = advertising_payload(name=name, services=[_UART_UUID])
         self._advertise()
+        self._value = None
 
     def _irq(self, event, data):
         # Track connections so we can send notifications.
@@ -59,8 +60,10 @@ class BLESimplePeripheral:
         elif event == _IRQ_GATTS_WRITE:
             conn_handle, value_handle = data
             value = self._ble.gatts_read(value_handle)
-            if value_handle == self._handle_rx and self._write_callback:
-                self._write_callback(value)
+            #print(value.decode())
+            self._value = value.decode()
+            #if value_handle == self._handle_rx and self._write_callback:
+            #    self._write_callback(value)
 
     def send(self, data):
         for conn_handle in self._connections:
@@ -75,6 +78,15 @@ class BLESimplePeripheral:
 
     def on_write(self, callback):
         self._write_callback = callback
+
+    def on_read(self):
+        if (self._value == None):
+            return
+        #print(self._write_callback.decode())
+        value = self._value
+        self._value = None
+        
+        return value
 
 
 def demo():

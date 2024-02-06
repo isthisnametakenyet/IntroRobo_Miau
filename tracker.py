@@ -1,4 +1,4 @@
-from machine import Pin
+from machine import Pin, ADC
 import time
  
  
@@ -11,7 +11,7 @@ class track:
         """track constructor
                 It initializes the Pin of the Track Sensor
         """
-        self.ldr_pin = machine.ADC(Pin(pin))
+        self.ldr_pin = ADC(Pin(pin))
         
     def get_raw_value(self):
         """ Gets the raw value from the sensor, and it passes
@@ -26,6 +26,12 @@ class track:
                where 0 represents minimum light and 100 represents maximum light.
         """
         return round(self.get_raw_value()/65535*100,2)
+    
+    def on_track(self):
+        if (self.get_light_percentage() > 75):
+            return 1
+        else:
+            return 0
  
 #ldr = track(27)
 

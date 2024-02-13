@@ -34,7 +34,7 @@ class UartClass:
 
     """
         
-    def __init__(self, identifier, tx_pin, rx_pin):
+    def __init__(self, identifier, tx_pin = -1, rx_pin = -1):
         """UartClass constructor
         
         During initialization the class creates a UART and launches the
@@ -49,8 +49,11 @@ class UartClass:
         """
         self.flag_start = False
         self.flag_stop = False
-        self.uart = UART(identifier, 115200, tx = tx_pin, rx = rx_pin)
-        
+        if (tx_pin == -1):
+            self.uart = UART(identifier, 115200)
+        else:
+            self.uart = UART(identifier, 115200, tx = tx_pin, rx = rx_pin)
+
         _thread.start_new_thread(self.__listener, ())
         sleep_ms(1000)
         
@@ -88,14 +91,19 @@ class UartClass:
         
         """
         while True:
+            
             line = self.uart.readline()
             #print(line)
             if(line != None):
+                print("algo")
+                print(str(line))
                 try:
                     obj = json.loads(line)
+                    print(obj['command'])
                     if('command' in obj):
                         if obj['command'] == 'start':
                             self.flag_start = True
+                            print("2 wow")
                         if obj['command'] == 'stop':
                             self.flag_stop = True
                         if obj['command'] == 'move':
@@ -152,13 +160,13 @@ if __name__ == "__main__":
         pin 5 --- pin 13
 
     """
-    sender = UartClass(1,4,5)
-    receiver = UartClass(2,13,14)
+    #sender = UartClass(1,4,5)
+    receiver = UartClass(1,13,14)
     
     while True:
         if(receiver.is_started() == True):
             print("Start")
-        sender.send_command("start")
+        #sender.send_command("start")
         sleep_ms(1000)
     
 

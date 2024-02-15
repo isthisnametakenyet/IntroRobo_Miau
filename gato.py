@@ -1,20 +1,13 @@
-import bluetooth
-from BLUTH import BLESimplePeripheral
-import time
-
 from rpi_motors import Car
 from servo import Servo
 from ultra import Ultra
 from machine import Pin
 from tracker import track
-#from uart import UartClass
+from uart import UartClass
 
 class MiauClass:
     
     def __init__(self):
-
-        ble = bluetooth.BLE()
-        p = BLESimplePeripheral(ble)
 
         ultra_sensor = Ultra(5, 18, 10000)  # pines a decidir/buscar
 
@@ -23,17 +16,21 @@ class MiauClass:
         tracker2 = track(27) # num to change
 
         car = Car()
+        
+        receiver = UartClass(1,5,4)
 
         estado = 0
         moved = 0
         stopped = False
         prev_estado = 0
-
-        while (p.is_connected() == 0):
-            time.sleep(0.1)
+        
+        tiempo_sidemove = 0.25
+        tiempo_forwardmove = 3
 
         while 1:
-            if p.on_read() == "stop":
+            print("estado: " + str(estado))
+
+            if receiver.is_stop:
                     # nos guardamos en el código que hemos parado
                     prev_estado = estado
                     stopped = True
@@ -41,7 +38,7 @@ class MiauClass:
                     estado = 0
             if estado == 0 :
                 # esperamos a que recibamos un start para comenzar el código
-                if p.on_read() == "start":
+                if receiver.is_started:
                     # si es la primera vez que se ejecuta seguir la línea
                     if not stopped:
                         estado = 1
@@ -69,17 +66,17 @@ class MiauClass:
                     elif tracker2.on_track() == 1:
                         car.move_derecha(50)
 
-                    time.sleep(0.25)  # sujeto a cambios tiempo que sigue para adelante
+                    time.sleep(tiempo_sidemove)  # sujeto a cambios tiempo que sigue para adelante
                     car.stop()
                     estado = 1
                 else: # si hemos llegado a la línea final
                     estado = 6
 
             elif estado == 3:
-                # Nos movemos hacia la izquierda hasta que no detectamos
+                # Nos movemos hacia la derecha hasta que no detectamos
                 # el objeto
                 car.move_side_derecha(50)
-                time.sleep(0.25)
+                time.sleep(tiempo_sidemove)
                 car.stop()
                 distance = ultra_sensor.distance_cm()
                 moved += 1
@@ -89,14 +86,14 @@ class MiauClass:
                 # nos movemos hacia delante durante 3s pensando que rodearemos
                 # el objeto
                 car.move(50)
-                time.sleep(3)
+                time.sleep(tiempo_forwardmove)
                 car.stop()
                 estado = 5
             elif estado == 5:
                 # volvemos al estado original al que estuvimos
                 # moviendonos a la izquierda
                 car.move_side_izquierda(50)
-                time.sleep(0.25)
+                time.sleep(tiempo_sidemove)
                 car.stop()
                 moved -= 1
                 # miramos por si de casualidad hemos encontrado la línea
@@ -110,6 +107,7 @@ class MiauClass:
                 car.stop()
             else:
                     print("ERORR")
+        
 
     def switchLedValue(self, led, blink):
         if(1 == led.value()):

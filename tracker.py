@@ -28,7 +28,7 @@ class track:
         return round(self.get_raw_value()/65535*100,2)
     
     def on_track(self):
-        if (self.get_light_percentage() > 75):
+        if (self.get_light_percentage() < 25):
             return 1
         else:
             return 0

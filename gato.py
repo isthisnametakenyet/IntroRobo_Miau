@@ -98,13 +98,14 @@ class MiauClass:
                 car.move_side_izquierda(50)
                 time.sleep(0.25)
                 car.stop()
+                moved -= 1
                 # miramos por si de casualidad hemos encontrado la línea
                 if tracker0.on_track() or tracker1.on_track() or tracker2.on_track():
                     moved = 0
                     estado = 2 # seguimos el procedimiento de seguir a la línea
                 # si hemos vuelto a nuestro lugar original según la variable
                 elif moved == 0:
-                     moved -= 1# Return to initial state
+                     estado = 2# Return to initial state
             elif estado == 6:
                 car.stop()
             else:

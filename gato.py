@@ -9,15 +9,17 @@ class MiauClass:
     
     def __init__(self):
 
-        ultra_sensor = Ultra(5, 18, 10000)  # pines a decidir/buscar
+        ultra_sensor = Ultra(3, 2, 10000)  # pines a decidir/buscar
 
-        tracker0 = track(13)
-        tracker1 = track(12) # num to change
-        tracker2 = track(27) # num to change
+        tracker0 = track(4)
+        tracker1 = track(5) # num to change
+        tracker2 = track(6) # num to change
+        
+        servo = Servo(7)
 
         car = Car()
         
-        receiver = UartClass(1,5,4)
+        receiver = UartClass(1,-1,-1)
 
         estado = 0
         moved = 0
@@ -26,6 +28,7 @@ class MiauClass:
         
         tiempo_sidemove = 0.25
         tiempo_forwardmove = 3
+        led=Pin(2,Pin.OUT)
 
         while 1:
             print("estado: " + str(estado))
@@ -56,6 +59,8 @@ class MiauClass:
                     estado = 2  # nos movemos adelante sin problemas mirando la línea
                 else:
                     estado = 3 # hemos encontrado el objeto procedemos a activar protocolo de esquivaje de objeto
+                #blink led T=1s
+                switchLedValue(led,0.5)
             elif estado == 2:
                 if tracker0.on_track() or tracker1.on_track() or tracker2.on_track():
                     # si aún no hemos llegado al final de la línea seguirla
@@ -71,7 +76,8 @@ class MiauClass:
                     estado = 1
                 else: # si hemos llegado a la línea final
                     estado = 6
-
+                #blink led T=0.2s
+                switchLedValue(led,0.1)
             elif estado == 3:
                 # Nos movemos hacia la derecha hasta que no detectamos
                 # el objeto
@@ -82,6 +88,8 @@ class MiauClass:
                 moved += 1
                 if distance > 50:
                     estado = 4
+                #led ON
+                led.value(1)
             elif estado == 4:
                 # nos movemos hacia delante durante 3s pensando que rodearemos
                 # el objeto
@@ -89,6 +97,7 @@ class MiauClass:
                 time.sleep(tiempo_forwardmove)
                 car.stop()
                 estado = 5
+                led.value(0)
             elif estado == 5:
                 # volvemos al estado original al que estuvimos
                 # moviendonos a la izquierda
@@ -103,6 +112,7 @@ class MiauClass:
                 # si hemos vuelto a nuestro lugar original según la variable
                 elif moved == 0:
                      estado = 2# Return to initial state
+                led.value(0)
             elif estado == 6:
                 car.stop()
             else:

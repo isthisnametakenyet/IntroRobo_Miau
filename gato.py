@@ -64,10 +64,10 @@ class MiauClass:
             elif estado == 2:
                 if tracker0.on_track() or tracker1.on_track() or tracker2.on_track():
                     # si aún no hemos llegado al final de la línea seguirla
-                    if tracker1.on_track() == 1:
+                    if tracker0.on_track() == 1:
+                        car.move(50) # Move forward
+                    elif tracker1.on_track() == 1:
                         car.move_izq(50)
-                    elif tracker0.on_track() == 1:
-                        car.move(50)  # Move forward
                     elif tracker2.on_track() == 1:
                         car.move_derecha(50)
 
@@ -87,9 +87,16 @@ class MiauClass:
                 distance = ultra_sensor.distance_cm()
                 moved += 1
                 if distance > 50:
-                    estado = 4
+                    estado = 7
                 #led ON
                 led.value(1)
+            elif estado == 7: # llega un momento donde no lo vemos pero sigue habiendo caja
+                car.move_side_derecha(50)
+                time.sleep(tiempo_sidemove)
+                car.stop()
+                moved += 1
+                estado = 4
+
             elif estado == 4:
                 # nos movemos hacia delante durante 3s pensando que rodearemos
                 # el objeto
@@ -117,7 +124,7 @@ class MiauClass:
                 car.stop()
             else:
                     print("ERORR")
-        
+    # mirar el problema de que tenemos que movernos una vez más a la izquierda
 
     def switchLedValue(self, led, blink):
         if(1 == led.value()):

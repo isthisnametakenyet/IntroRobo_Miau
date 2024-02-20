@@ -3,7 +3,8 @@ from servo import Servo
 from ultra import Ultra
 from machine import Pin
 from tracker import track
-from uart import UartClass
+from example_uartClass import UartClass
+#from simple_uartClass import UartClass
 
 class MiauClass:
     
@@ -25,23 +26,27 @@ class MiauClass:
         moved = 0
         stopped = False
         prev_estado = 0
-        
+
         tiempo_sidemove = 0.25
         tiempo_forwardmove = 3
         led=Pin(2,Pin.OUT)
 
         while 1:
-            print("estado: " + str(estado))
+            #print("estado: " + str(estado))
+            #message = receiver.receive_command()
+            #print("Message: " + message)
 
-            if receiver.is_stop:
-                    # nos guardamos en el código que hemos parado
-                    prev_estado = estado
-                    stopped = True
-                    # volvemos a un estado esperando a que empecemos
-                    estado = 0
+            if receiver.is_stop():
+                print("Received Stop")
+                # nos guardamos en el código que hemos parado
+                prev_estado = estado
+                stopped = True
+                # volvemos a un estado esperando a que empecemos
+                estado = 0
             if estado == 0 :
                 # esperamos a que recibamos un start para comenzar el código
-                if receiver.is_started:
+                if receiver.is_started():
+                    print("Received Start")
                     # si es la primera vez que se ejecuta seguir la línea
                     if not stopped:
                         estado = 1
@@ -133,3 +138,6 @@ class MiauClass:
             led.value(1)
         time.sleep(blink)    
     
+
+if __name__  == "__main__":
+    gato = MiauClass()

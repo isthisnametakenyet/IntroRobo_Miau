@@ -50,7 +50,7 @@ class Servo:
 
     def __initialise(self, pin):
         """ Creates a PWM which is send to the pin.
-        """"
+        """
         self.current_angle = -0.001
         self.__angle_conversion_factor = (self.__max_u10_duty - self.__min_u10_duty) / (self.max_angle - self.min_angle)
         self.__motor = PWM(Pin(pin))

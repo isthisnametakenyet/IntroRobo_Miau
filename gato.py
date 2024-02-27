@@ -20,7 +20,7 @@ class MiauClass:
 
         car = Car()
         
-        receiver = UartClass(1,-1,-1)
+        receiver = UartClass(0,-1,-1)
 
         estado = 0
         moved = 0
@@ -37,7 +37,7 @@ class MiauClass:
             #print("Message: " + message)
 
             if receiver.is_stop():
-                print("Received Stop")
+                print("Stop StateMachine")
                 # nos guardamos en el código que hemos parado
                 prev_estado = estado
                 stopped = True
@@ -46,7 +46,7 @@ class MiauClass:
             if estado == 0 :
                 # esperamos a que recibamos un start para comenzar el código
                 if receiver.is_started():
-                    print("Received Start")
+                    print("Start StateMachine")
                     # si es la primera vez que se ejecuta seguir la línea
                     if not stopped:
                         estado = 1

@@ -152,8 +152,8 @@ class MiauClass:
                     estado = 2
                 # si encontramos negro hemos llegado
                 else:
-                    estadO = 7
-            elif estadp == 7:
+                    estado = 7
+            elif estado == 7:
                 car.stop()
             else:
                     print("ERORR")

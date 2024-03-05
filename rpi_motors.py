@@ -62,10 +62,10 @@ class Car:
         self.motors[3].rotate(-power)
 
     def move_side_izquierda(self, power):
-        self.motors[0].rotate(power)
-        self.motors[1].rotate(-power)
-        self.motors[2].rotate(power)
-        self.motors[3].rotate(-power)
+        self.motors[0].rotate(-power)
+        self.motors[1].rotate(power)
+        self.motors[2].rotate(-power)
+        self.motors[3].rotate(power)
 
     def move_derecha(self, power):  # mover a la DERECHA
         self.motors[0].rotate(power)

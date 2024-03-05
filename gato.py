@@ -29,8 +29,8 @@ class MiauClass:
         prev_estado = 0
         prev_move = 0
 
-        tiempo_sidemove = 0.2
-        tiempo_forwardmove = 0.2
+        tiempo_sidemove = 0.25
+        tiempo_forwardmove = 1
         #led=Pin(2,Pin.OUT)
 
         while 1:
@@ -63,7 +63,7 @@ class MiauClass:
                 #check if there's something ahead
                 distance = ultra_sensor.distance_cm()
                 print('Distance:', distance, 'cm')
-                if distance < 0 or distance > 20:
+                if distance < 0 or distance > 15:
                     estado = 2  # nos movemos adelante sin problemas mirando la línea
                 else:
                     estado = 3 # hemos encontrado el objeto procedemos a activar protocolo de esquivaje de objeto
@@ -96,12 +96,13 @@ class MiauClass:
             elif estado == 3:
                 # Nos movemos hacia la derecha hasta que no detectamos
                 # el objeto
-                car.move_side_derecha(30)
+                car.move_side_derecha(20)
                 time.sleep(tiempo_sidemove)
                 car.stop()
                 distance = ultra_sensor.distance_cm()
                 moved += 1
-                if distance > 50:
+                print(distance)
+                if distance > 20:
                     estado = 4
                 #led ON
                 #led.value(1)
@@ -112,9 +113,16 @@ class MiauClass:
                 moved += 1
                 estado = 5
             elif estado == 5:
-                # nos movemos hacia delante durante 3s pensando que rodearemos
+                # nos movemos hacia delante durante 1s pensando que rodearemos
                 # el objeto
                 car.move(30)
+                time.sleep(tiempo_forwardmove)
+                car.stop()
+                estado = 52
+                
+            elif estado == 52:
+                #giramos para corregir direccion del gato
+                car.move_izq(30)
                 time.sleep(tiempo_forwardmove)
                 car.stop()
                 estado = 6
@@ -123,16 +131,17 @@ class MiauClass:
                 # volvemos al estado original al que estuvimos
                 # moviendonos a la izquierda
                 car.move_side_izquierda(30)
-                time.sleep(tiempo_sidemove)
-                car.stop()
+                #time.sleep(tiempo_sidemove)
+                #car.stop()
                 moved -= 1
                 # miramos por si de casualidad hemos encontrado la línea
                 if tracker0.on_track() or tracker1.on_track() or tracker2.on_track():
                     moved = 0
                     estado = 2 # seguimos el procedimiento de seguir a la línea
+                    car.stop()
                 # si hemos vuelto a nuestro lugar original según la variable
-                elif moved == 0:
-                    estado = 2# Return to initial state
+                #elif moved == 0:
+                #    estado = 2# Return to initial state
                 #.led.value(0)
             elif estado == 7: # si hemos llegado (teoricamente a la línea)
                 if  prev_move == 0:

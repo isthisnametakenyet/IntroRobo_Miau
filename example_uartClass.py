@@ -107,7 +107,9 @@ class UartClass:
         """
         while True:
             line = self.uart.readline()
+            #print(str(line))
             if(line != None):
+                #print("UART Algoooo")
                 if (self.lcd!=None):
                     self.lcd.puts("                ", 0,0)	#clear line
                     self.lcd.puts(line, 0,0)
@@ -116,6 +118,7 @@ class UartClass:
                 try:
                     obj = json.loads(line)
                     if('command' in obj):
+                        print("command received: " + str(obj['command']))
                         if obj['command'] == 'start':
                             self.flag_start = True
                         if obj['command'] == 'stop':

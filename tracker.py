@@ -11,7 +11,7 @@ class track:
         """track constructor
                 It initializes the Pin of the Track Sensor
         """
-        self.ldr_pin = Pin(pin)
+        self.ldr_pin = Pin(pin, Pin.IN, Pin.PULL_DOWN)
         
     def get_raw_value(self):
         """ Gets the raw value from the sensor, and it passes
@@ -27,6 +27,9 @@ class track:
                from the LDR sensor. The raw value is normalized to a percentage scale (0-100),
                where 0 represents minimum light and 100 represents maximum light.
         """
+        #print("ldr_pin: " + str(self.ldr_pin))
+        #print("raw_value: " + str(self.get_raw_value()))
+
         return round(self.get_raw_value()/65535*100,2)
     
     def on_track(self):
@@ -34,17 +37,12 @@ class track:
         #    return 1
         #else:
         #    return 0
-        
-        if (self.get_raw_value()):
+        print(self.get_light_percentage())
+        if (self.get_light_percentage()):
             return 1
         else:
             return 0
  
-#ldr = track(27)
-
-#while True:
- #    print(ldr.get_light_percentage())
-  #   time.sleep(1)
 
 if __name__ == "__main__":
     """Nominal behavior test for track sensor implementation.
@@ -53,14 +51,27 @@ if __name__ == "__main__":
        values are printed in a loop.
         
         Wiring:
-        pin 18
+        pin 4
+        pin 5
+        pin 6
+
     """
-    ldr_sensor = track(18)
+    ldr_sensor1 = track(4)
+    ldr_sensor2 = track(5)
+    ldr_sensor3 = track(6)
+
 
     while True:
-        raw_value = ldr_sensor.get_raw_value()
-        light_percentage = ldr_sensor.get_light_percentage()
+        raw_value1 = ldr_sensor1.get_raw_value()
+        light_percentage1 = ldr_sensor1.get_light_percentage()
+        raw_value2 = ldr_sensor2.get_raw_value()
+        light_percentage2 = ldr_sensor2.get_light_percentage()
+        raw_value3 = ldr_sensor3.get_raw_value()
+        light_percentage3 = ldr_sensor3.get_light_percentage()
 
-        print(f"Raw Value: {raw_value}, Light Percentage: {light_percentage}%")
+        print(f"Raw Value1: {raw_value1}, Light Percentage1: {light_percentage1}%")
+        print(f"Raw Value2: {raw_value2}, Light Percentage2: {light_percentage2}%")
+        print(f"Raw Value3: {raw_value3}, Light Percentage3: {light_percentage3}%")
 
         time.sleep(1)
+

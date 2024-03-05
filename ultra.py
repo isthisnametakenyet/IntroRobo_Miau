@@ -66,9 +66,9 @@ class Ultra:
         cms = (pulse_time / 2) / 29.1
         return cms
     
-    if __name__ == "main":
-        sensor = Ultra(5,18,10000)
-        while(1):   
-            distance = sensor.distance_cm()
-            print('Distance:', distance, 'cm')
-            time.sleep(2)
+if __name__  == "__main__":
+    sensor = Ultra(3,2,10000)
+    while(1):   
+        distance = sensor.distance_cm()
+        print('Distance:', distance, 'cm')
+        time.sleep(2)

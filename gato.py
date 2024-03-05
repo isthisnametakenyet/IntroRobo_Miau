@@ -11,7 +11,7 @@ class MiauClass:
     
     def __init__(self):
 
-        ultra_sensor = Ultra(3, 2, 10000)  # pines a decidir/buscar
+        ultra_sensor = Ultra(3,2,10000)  # pines a decidir/buscar
 
         tracker0 = track(5)
         tracker1 = track(4) # num to change
@@ -31,7 +31,7 @@ class MiauClass:
 
         tiempo_sidemove = 0.2
         tiempo_forwardmove = 0.2
-        led=Pin(2,Pin.OUT)
+        #led=Pin(2,Pin.OUT)
 
         while 1:
             print("estado: " + str(estado))
@@ -62,7 +62,7 @@ class MiauClass:
             elif estado == 1:
                 #check if there's something ahead
                 distance = ultra_sensor.distance_cm()
-                print(distance)
+                print('Distance:', distance, 'cm')
                 if distance < 0 or distance > 20:
                     estado = 2  # nos movemos adelante sin problemas mirando la línea
                 else:
@@ -104,7 +104,7 @@ class MiauClass:
                 if distance > 50:
                     estado = 4
                 #led ON
-                led.value(1)
+                #led.value(1)
             elif estado == 4: # llega un momento donde no lo vemos pero sigue habiendo caja
                 car.move_side_derecha(30)
                 time.sleep(tiempo_sidemove)
@@ -118,7 +118,7 @@ class MiauClass:
                 time.sleep(tiempo_forwardmove)
                 car.stop()
                 estado = 6
-                led.value(0)
+                #led.value(0)
             elif estado == 6:
                 # volvemos al estado original al que estuvimos
                 # moviendonos a la izquierda
@@ -133,7 +133,7 @@ class MiauClass:
                 # si hemos vuelto a nuestro lugar original según la variable
                 elif moved == 0:
                     estado = 2# Return to initial state
-                led.value(0)
+                #.led.value(0)
             elif estado == 7: # si hemos llegado (teoricamente a la línea)
                 if  prev_move == 0:
                     car.move(30) # Move forward

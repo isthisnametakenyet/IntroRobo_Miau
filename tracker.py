@@ -21,10 +21,10 @@ class track:
         
         if self.ldr_pin.value() == 0:
             #print("line present")
-            return 0
+            return 1
         else:
             #print("No line present")
-            return 1
+            return 0
  
 #ldr = track(27)
 

@@ -28,8 +28,8 @@ class MiauClass:
         stopped = False
         prev_estado = 0
 
-        tiempo_sidemove = 3
-        tiempo_forwardmove = 3
+        tiempo_sidemove = 0.2
+        tiempo_forwardmove = 0.2
         led=Pin(2,Pin.OUT)
 
         while 1:

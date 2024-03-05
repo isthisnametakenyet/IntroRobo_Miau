@@ -2,7 +2,7 @@ import bluetooth
 from BLUTH import BLESimplePeripheral
 import time
 from machine import Pin
-from uart import UartClass
+from example_uartClass import UartClass
 
 class MiauClass:
 

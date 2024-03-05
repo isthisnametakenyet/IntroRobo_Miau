@@ -11,34 +11,20 @@ class track:
         """track constructor
                 It initializes the Pin of the Track Sensor
         """
-        self.ldr_pin = Pin(pin)
+        self.ldr_pin = Pin(pin, Pin.IN, Pin.PULL_DOWN)
         
-    def get_raw_value(self):
-        """ Gets the raw value from the sensor, and it passes
-                though the value to the user reading the analog value from an ADC
-                pin associated with an LDR Sensor.
-        """
-        #return self.ldr_pin.read_u16()
-        return self.ldr_pin
-
-    
-    def get_light_percentage(self):
-        """Calculates and returns the light percentage based on the raw analog value obtained
-               from the LDR sensor. The raw value is normalized to a percentage scale (0-100),
-               where 0 represents minimum light and 100 represents maximum light.
-        """
-        return round(self.get_raw_value()/65535*100,2)
-    
     def on_track(self):
         #if (self.get_light_percentage() < 25):
         #    return 1
         #else:
         #    return 0
         
-        if (self.get_raw_value()):
-            return 1
-        else:
+        if self.ldr_pin.value() == 0:
+            #print("line present")
             return 0
+        else:
+            #print("No line present")
+            return 1
  
 #ldr = track(27)
 
@@ -55,12 +41,9 @@ if __name__ == "__main__":
         Wiring:
         pin 18
     """
-    ldr_sensor = track(18)
+    ldr_sensor = track(6)
 
     while True:
-        raw_value = ldr_sensor.get_raw_value()
-        light_percentage = ldr_sensor.get_light_percentage()
-
-        print(f"Raw Value: {raw_value}, Light Percentage: {light_percentage}%")
+        ldr_sensor.on_track()
 
         time.sleep(1)

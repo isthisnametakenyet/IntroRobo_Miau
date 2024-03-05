@@ -70,17 +70,24 @@ class Car:
     def move_derecha(self, power):  # mover a la DERECHA
         self.motors[0].rotate(power)
         self.motors[1].rotate(power * 0.5)
-        self.motors[2].rotate(power)
-        self.motors[3].rotate(power * 0.5)
+        self.motors[2].rotate(power * 0.5)
+        self.motors[3].rotate(power)
 
     def move_izq(self, power):  # mover a la IZQ
         self.motors[0].rotate(power * 0.5)
         self.motors[1].rotate(power)
-        self.motors[2].rotate(power * 0.5)
-        self.motors[3].rotate(power)
+        self.motors[2].rotate(power)
+        self.motors[3].rotate(power * 0.5)
 
     def stop(self):
         self.move(0)
+        
+    def giro(self,power):
+        self.motors[0].rotate(power * 0.5)
+        self.motors[1].rotate(power)
+        self.motors[2].rotate(power)
+        self.motors[3].rotate(power * 0.5)
+
 
     def test(self):
         for i in range(4):
@@ -93,7 +100,7 @@ class Car:
             # self.move(25)
             sleep(2)
             self.stop()
-            self.move_izq(30)
+            self.giro(30)
             # self.move(100)
             sleep(2)
             self.stop()
